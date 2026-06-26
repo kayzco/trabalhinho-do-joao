@@ -1,26 +1,35 @@
 <?php
 session_start();
-include "config.php";
+require_once "config.php";
+require_once "usuario.php";           // Caminho para a sua Entity Usuario
+require_once "usuariorepository.php"; // Caminho para o seu Repository
 
-$email = $_POST['email'];
-$senha = $_POST['senha'];
+use App\Repository\UsuarioRepository;
 
-$sql = "SELECT * FROM usuario WHERE email='$email' AND senha='$senha'";
-$result = $conn->query($sql);
+$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+$senha = $_POST['senha'] ?? '';
 
-if ($result->num_rows == 1) {
+if (!$email || empty($senha)) {
+    header("Location: login.php?erro=1");
+    exit;
+}
 
-    $usuario = $result->fetch_assoc();
+// Passa a conexão PDO ($pdo) criada no config.php para o Repository
+$usuarioRepo = new UsuarioRepository($pdo);
+$usuario = $usuarioRepo->buscarPorEmailESenha($email, $senha);
 
-    $_SESSION['id'] = $usuario['id'];
-    $_SESSION['nome'] = $usuario['nome'];
+if ($usuario) {
+    // Se achou o usuário, salva os dados vindos da Entity na Sessão
+    $_SESSION['id'] = $usuario->getId();
+    $_SESSION['nome'] = $usuario->getNome();
 
     header("Location: dashboard.php");
     exit;
-
 } else {
-
-    echo "Email ou senha inválidos.";
-
+    // Se falhar, volta com erro
+    header("Location: login.php?erro=1");
+    exit;
 }
-?>
+
+
+
