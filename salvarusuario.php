@@ -6,7 +6,6 @@ $nome  = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
 $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 $senha = $_POST['senha'] ?? '';
 
-// Verificar se os campos vieram vazios
 if (!$nome || !$email || empty($senha)) {
     header("Location: cadastro.php?erro=campos_vazios");
     exit;

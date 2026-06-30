@@ -34,7 +34,7 @@ $logado = isset($_SESSION['id']);
         }
 
         h1 {
-            color: #f97316; /* Laranja característico de Haikyuu!! */
+            color: #42c262; /* Laranja característico de Haikyuu!! */
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
@@ -49,7 +49,7 @@ $logado = isset($_SESSION['id']);
         .btn {
             display: inline-block;
             padding: 12px 30px;
-            background: #2563eb;
+            background: #000000;
             color: white;
             text-decoration: none;
             border-radius: 8px;

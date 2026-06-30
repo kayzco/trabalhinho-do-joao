@@ -52,7 +52,7 @@ if (isset($_SESSION['id'])) {
         }
 
         button:hover {
-            background: #1d4ed8;
+            background: #082c91;
         }
 
         h2 {
@@ -68,7 +68,7 @@ if (isset($_SESSION['id'])) {
         }
 
         .links a {
-            color: #2563eb;
+            color: #3faeae;
             text-decoration: none;
         }
 
@@ -101,7 +101,7 @@ if (isset($_SESSION['id'])) {
     </form>
 
     <div class="links">
-        <a href="cadastro.php">Não tem conta? Cadastre-se</a>
+       <a href="trabalhinho-do-joao/cadastro.php">Não tem conta? Cadastre-se</a> 
     </div>
 
 </div> </body>
