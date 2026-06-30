@@ -1,4 +1,9 @@
+<?php
+
 namespace App\Repository;
+
+// Precisamos puxar a classe do usuário aqui para o repositório conhecê-la!
+require_once "usuario.php"; 
 
 use App\Entity\Usuario;
 use PDO;
@@ -16,7 +21,7 @@ class UsuarioRepository {
         $stmt->execute(['email' => $email, 'senha' => $senha]);
         
         $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if (!$dados) {
             return null;
         }
