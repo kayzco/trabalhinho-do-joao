@@ -52,7 +52,8 @@ if (isset($_SESSION['id'])) {
         }
 
         button:hover {
-            background: #001c6a;
+
+            background: #082c91;
         }
 
         h2 {
@@ -68,7 +69,7 @@ if (isset($_SESSION['id'])) {
         }
 
         .links a {
-            color: #05060a;
+            color: #3faeae;
             text-decoration: none;
         }
 
@@ -84,7 +85,9 @@ if (isset($_SESSION['id'])) {
 
     <?php if (isset($_GET['erro'])): ?>
         <p style="color: #ef4444; text-align: center; font-size: 14px; margin-bottom: 10px;">
-            .
+
+            Email ou senha inválidos.
+            
         </p>
     <?php endif; ?>
 

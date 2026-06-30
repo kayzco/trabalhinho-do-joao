@@ -6,7 +6,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #0f172a;
+            background: #0f172
+            a;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -78,7 +79,9 @@
         <p style="color: #ef4444; text-align: center; font-size: 14px;">Preencha todos os campos!</p>
     <?php endif; ?>
 
-    <form action="salvar-usuario.php" method="POST">
+
+    <form action="salvarusuario.php" method="POST">
+        
         <input type="text" name="nome" placeholder="Nome Completo" required>
         <input type="email" name="email" placeholder="Seu Email" required>
         <input type="password" name="senha" placeholder="Sua Senha" required>
