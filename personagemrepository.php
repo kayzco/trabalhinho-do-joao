@@ -27,7 +27,7 @@ class PersonagemRepository {
 
     // Inserir um novo personagem no banco (CREATE do CRUD)
     public function salvar(Personagem $p): bool {
-        $sql = "INSERT INTO personagem (nome, idade, altura, numero, descrição, id_time, id_funcao, id_posicao, imagem) 
+        $sql = "INSERT INTO personagem (nome, idade, altura, numero, descricao, id_time, id_funcao, id_posicao, imagem) 
                 VALUES (:nome, :idade, :altura, :numero, :descricao, :id_time, :id_funcao, :id_posicao, :imagem)";
         
         $stmt = $this->pdo->prepare($sql);
