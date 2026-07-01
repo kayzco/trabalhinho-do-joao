@@ -1,33 +1,47 @@
 <?php
 session_start();
 require_once "config.php";
-require_once "usuario.php";           // Caminho para a sua Entity Usuario
-require_once "usuariorepository.php"; // Caminho para o seu Repository
 
-use App\Repository\UsuarioRepository;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $senha = $_POST['senha'] ?? '';
 
-$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-$senha = $_POST['senha'] ?? '';
+    if ($email && !empty($senha)) {
+        try {
+            // ✨ IMPORTANTE: O SELECT garante que estamos pegando o 'id_time' e a 'descricao'
+            $sql = "SELECT id, nome, email, senha, descricao, id_time FROM usuario WHERE email = :email";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(['email' => $email]);
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$email || empty($senha)) {
-    header("Location: login.php?erro=1");
-    exit;
-}
+            // Se o usuário existir e a senha bater (ajuste aqui caso use password_verify)
+            if ($usuario && $senha === $usuario['senha']) {
+                
+                // Grava tudo na sessão
+                $_SESSION['id'] = $usuario['id'];
+                $_SESSION['nome'] = $usuario['nome'];
+                $_SESSION['descricao'] = $usuario['descricao'];
+                
+                // ✨ AQUI ESTÁ A MÁGICA DAS CORES: Salvando o time ao logar!
+                $_SESSION['id_time'] = $usuario['id_time']; 
 
-// Passa a conexão PDO ($pdo) criada no config.php para o Repository
-$usuarioRepo = new UsuarioRepository($pdo);
-$usuario = $usuarioRepo->buscarPorEmailESenha($email, $senha);
-
-if ($usuario) {
-    // Se achou o usuário, salva os dados vindos da Entity na Sessão
-    $_SESSION['id'] = $usuario->getId();
-    $_SESSION['nome'] = $usuario->getNome();
-
-    header("Location: dashboard.php");
-    exit;
+                // Manda direto para o dashboard com tudo funcionando
+                header("Location: dashboard.php");
+                exit;
+            } else {
+                // Senha errada ou usuário não existe
+                header("Location: login.php?erro=1");
+                exit;
+            }
+        } catch (PDOException $e) {
+            die("Erro no sistema: " . $e->getMessage());
+        }
+    } else {
+        header("Location: login.php?erro=1");
+        exit;
+    }
 } else {
-    // Se falhar, volta com erro
-    header("Location: login.php?erro=1");
+    header("Location: login.php");
     exit;
 }
 

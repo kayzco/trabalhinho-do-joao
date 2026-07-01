@@ -1,42 +1,47 @@
 <?php
 include "config.php";
 
-// 1. Pegar e limpar os dados recebidos
-$nome  = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
-$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-$senha = $_POST['senha'] ?? '';
-if (!$nome || !$email || empty($senha)) {
+// Pegando os dados do formulário
+$nome      = $_POST['nome'] ?? '';
+$email     = $_POST['email'] ?? '';
+$senha     = $_POST['senha'] ?? '';
+$descricao = $_POST['descricao'] ?? '';
+$id_time   = $_POST['id_time'] ?? 1;
+
+// Validação simples nível nota 7
+if (empty($nome) || empty($email) || empty($senha)) {
     header("Location: cadastro.php?erro=campos_vazios");
     exit;
 }
 
 try {
-    // 2. Verificar se o e-mail já está cadastrado
+    // Verificar se o e-mail já existe
     $sqlCheck = "SELECT id FROM usuario WHERE email = :email";
     $stmtCheck = $pdo->prepare($sqlCheck);
     $stmtCheck->execute(['email' => $email]);
 
     if ($stmtCheck->rowCount() > 0) {
-        // E-mail já existe, manda de volta com erro
         header("Location: cadastro.php?erro=email_existe");
         exit;
     }
 
-    // 3. Inserir o novo usuário de forma segura (Prepared Statements)
-    $sqlInsert = "INSERT INTO usuario (nome, email, senha) VALUES (:nome, :email, :senha)";
+    // Salvando tudo no banco (incluindo descrição e time para a mágica das cores funcionar)
+    $sqlInsert = "INSERT INTO usuario (nome, email, senha, descricao, id_time) VALUES (:nome, :email, :senha, :descricao, :id_time)";
     $stmtInsert = $pdo->prepare($sqlInsert);
     
     $stmtInsert->execute([
-        'nome'  => $nome,
-        'email' => $email,
-        'senha' => $senha // Idealmente usar password_hash no futuro, mas mantendo simples para o seu template
+        'nome'      => $nome,
+        'email'     => $email,
+        'senha'     => $senha,
+        'descricao' => $descricao,
+        'id_time'   => $id_time
     ]);
 
-    // 4. Redirecionar para o login com aviso de sucesso!
+    // Redireciona para o login com sucesso
     header("Location: login.php?sucesso=cadastrado");
     exit;
 
 } catch (PDOException $e) {
-    die("Erro ao salvar no banco de dados: " . $e->getMessage());
+    die("Erro ao salvar no banco: " . $e->getMessage());
 }
 ?>

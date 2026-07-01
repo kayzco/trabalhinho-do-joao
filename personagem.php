@@ -13,6 +13,7 @@ class Personagem {
     private int $idFuncao;
     private int $idPosicao;
     private ?string $imagem;
+    private ?int $idUsuario; // ✨ Adicionado o atributo para o Usuário Dono
 
     public function __construct(
         ?int $id, string $nome, int $idade, float $altura, int $numero, 
@@ -28,9 +29,10 @@ class Personagem {
         $this->idFuncao = $idFuncao;
         $this->idPosicao = $idPosicao;
         $this->imagem = $imagem;
+        $this->idUsuario = null; // Inicializa vazio por padrão
     }
 
-    // Getters para o PHP conseguir ler os dados protegidos
+    // Getters e Setters para o PHP conseguir ler e gravar os dados protegidos
     public function getId(): ?int { return $this->id; }
     public function getNome(): string { return $this->nome; }
     public function getIdade(): int { return $this->idade; }
@@ -41,4 +43,8 @@ class Personagem {
     public function getIdFuncao(): int { return $this->idFuncao; }
     public function getIdPosicao(): int { return $this->idPosicao; }
     public function getImagem(): ?string { return $this->imagem; }
+    
+    // ✨ Métodos novos para o id_usuario
+    public function getIdUsuario(): ?int { return $this->idUsuario; }
+    public function setIdUsuario(?int $idUsuario): void { $this->idUsuario = $idUsuario; }
 }

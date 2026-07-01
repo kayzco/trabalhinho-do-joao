@@ -12,6 +12,9 @@ require_once "personagemrepository.php";
 use App\Entity\Personagem;
 use App\Repository\PersonagemRepository;
 
+// ✨ PEGA O ID DO USUÁRIO LOGADO DIRETO DA SESSÃO
+$id_usuario = $_SESSION['id'];
+
 // 1. Pegar dados e higienizar
 $nome       = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
 $idade      = filter_input(INPUT_POST, 'idade', FILTER_VALIDATE_INT);
@@ -62,6 +65,11 @@ try {
     $personagem = new Personagem(
         null, $nome, $idade, $altura, $numero, $descricao, $id_time, $id_funcao, $id_posicao, $nomeImagem
     );
+
+    // ✨ IMPORTANTE: Defina o id_usuario no seu objeto personagem.
+    // Se a sua classe Personagem tiver o atributo público ou método set, use assim:
+    $personagem->id_usuario = $id_usuario; 
+    // (Se sua classe usar encapsulamento privado, use: $personagem->setIdUsuario($id_usuario);)
 
     // 4. Salvar usando o Repository
     $personagemRepo = new PersonagemRepository($pdo);
