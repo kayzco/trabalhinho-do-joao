@@ -192,7 +192,7 @@ if ($meu_time == 2) {
             box-sizing: border-box;
         }
         .btn-submit {
-            background: <?php echo $cor_tema; ?>; /* Cor dinâmica */
+            background: <?php echo $cor_tema; ?>; 
             color: white;
             border: none;
             padding: 12px 20px;
@@ -350,7 +350,12 @@ if ($meu_time == 2) {
                     📝 Atualizar Cadastro
                 </h3>
                 
-                <form action="atualizar-perfil.php" method="POST">
+                <form action="atualizar-perfil.php" method="POST" enctype="multipart/form-data">
+                    
+                    <label style="color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 8px;">Foto de Perfil (Avatar)</label>
+                    <input type="file" name="foto_perfil" accept="image/*" 
+                           style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; margin-bottom: 15px; font-size: 0.85rem;">
+
                     <label style="color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 8px;">Nome do Técnico</label>
                     <input type="text" name="nome" value="<?php echo htmlspecialchars($_SESSION['nome']); ?>" required 
                            style="width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; margin-bottom: 15px;">
@@ -377,16 +382,27 @@ if ($meu_time == 2) {
                 <div style="background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155; position: relative; overflow: hidden;">
                     <div style="position: absolute; right: -15px; bottom: -15px; font-size: 6rem; opacity: 0.05; color: #fff; pointer-events: none;">🏐</div>
                     
-                    <h3 style="margin-bottom: 5px; color: #fff;"><?php echo htmlspecialchars($_SESSION['nome']); ?></h3>
-                    <p style="color: <?php echo $cor_tema ?? '#f97316'; ?>; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 15px;">
                         <?php 
-                            if ($_SESSION['id_time'] == 1) echo "VOE (Karasuno)";
-                            elseif ($_SESSION['id_time'] == 2) echo "CONECTAR (Nekoma)";
-                            elseif ($_SESSION['id_time'] == 3) echo "DOMINE A QUADRA (Aoba Johsai)";
-                            elseif ($_SESSION['id_time'] == 4) echo "FORÇA IRRESISTÍVEL (Shiratorizawa)";
-                            else echo "Olheiro Independente";
+                            $foto = !empty($_SESSION['foto_perfil']) ? 'uploads/' . $_SESSION['foto_perfil'] : 'https://api.dicebear.com/7.x/bottts/svg?seed=' . urlencode($_SESSION['nome']); 
                         ?>
-                    </p>
+                        <img src="<?php echo $foto; ?>" alt="Foto do Técnico" 
+                             style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid <?php echo $cor_tema ?? '#f97316'; ?>;">
+                        
+                        <div>
+                            <h3 style="color: #fff; margin: 0;"><?php echo htmlspecialchars($_SESSION['nome']); ?></h3>
+                            <p style="color: <?php echo $cor_tema ?? '#f97316'; ?>; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin: 2px 0 0 0;">
+                                <?php 
+                                    if ($_SESSION['id_time'] == 1) echo "VOE (Karasuno)";
+                                    elseif ($_SESSION['id_time'] == 2) echo "CONECTAR (Nekoma)";
+                                    elseif ($_SESSION['id_time'] == 3) echo "DOMINE A QUADRA (Aoba Johsai)";
+                                    elseif ($_SESSION['id_time'] == 4) echo "FORÇA IRRESISTÍVEL (Shiratorizawa)";
+                                    else echo "Olheiro Independente";
+                                ?>
+                            </p>
+                        </div>
+                    </div>
+                    
                     <p style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5; font-style: italic;">
                         "<?php echo !empty($_SESSION['descricao']) ? htmlspecialchars($_SESSION['descricao']) : 'Nenhuma nota de estratégia anotada ainda...'; ?>"
                     </p>

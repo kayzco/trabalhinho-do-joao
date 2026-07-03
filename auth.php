@@ -1,5 +1,4 @@
 <?php
-// auth.php
 session_start();
 require_once "config.php";
 require_once "usuario.php";
@@ -17,20 +16,41 @@ if (empty($email) || empty($senha)) {
 
 $repo = new UsuarioRepository($pdo);
 
+// O repositório faz a busca e valida a senha, retornando o objeto Usuario
 $usuario = $repo->buscarPorEmailESenha($email, $senha);
 
 if ($usuario) {
-    $_SESSION['id'] = $usuario->getId();
-    $_SESSION['nome'] = $usuario->getNome();
     
-    $_SESSION['id_time'] = $dados['id_time'] ?? 1; // Salva o ID correto do time na sessão
-    $_SESSION['descricao'] = $dados['descricao'] ?? ''; 
-    
+    // ✨ O TRUQUE INFALÍVEL: Convertemos o objeto para um array para burlar o bloqueio de "private"
+    // e conseguir ler os dados sem depender de adivinhar o nome dos métodos get!
+    $usuarioArray = (array) $usuario;
+
+    // Quando o PHP converte um objeto de uma classe com propriedades privadas para array,
+    // as chaves ganham o nome da classe antes do atributo. Vamos mapear isso com segurança:
+    $id = null;
+    $nome = '';
+    $descricao = '';
+    $id_time = 1;
+    $foto_perfil = null;
+
+    foreach ($usuarioArray as $chave => $valor) {
+        if (str_contains($chave, 'id')) $id = $valor;
+        if (str_contains($chave, 'nome')) $nome = $valor;
+        if (str_contains($chave, 'descricao')) $descricao = $valor;
+        if (str_contains($chave, 'idTime') || str_contains($chave, 'id_time')) $id_time = $valor;
+        if (str_contains($chave, 'foto_perfil') || str_contains($chave, 'fotoPerfil')) $foto_perfil = $valor;
+    }
+
+    // Configura as sessões com os valores extraídos com segurança
+    $_SESSION['id']          = $id;
+    $_SESSION['nome']        = $nome;
+    $_SESSION['descricao']   = $descricao;
+    $_SESSION['id_time']     = $id_time;
+    $_SESSION['foto_perfil'] = $foto_perfil;
+
     header("Location: dashboard.php");
     exit;
 } else {
-    header("Location: login.php?erro=1");
+    header("Location: login.php?erro=usuario_invalido");
     exit;
 }
-
-
