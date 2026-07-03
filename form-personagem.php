@@ -7,14 +7,20 @@ if (!isset($_SESSION['id'])) {
 
 require_once "config.php";
 
-// Buscar os times, posições e funções para listar nos campos de seleção (dropdowns)
+// Buscar os times, posições, funções e TAGS para listar na tela
 try {
     $times = $pdo->query("SELECT id, nome FROM time ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
     $posicoes = $pdo->query("SELECT id, nome FROM posicao ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
     $funcoes = $pdo->query("SELECT id, nome FROM funcao ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
+    
+    // ✨ CORREÇÃO: Buscando as tags do banco para o foreach da linha 219 não quebrar!
+    $tags = $pdo->query("SELECT id, nome FROM tag ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Erro ao carregar dados auxiliares do banco: " . $e->getMessage());
 }
+
+// Captura o erro da URL de forma segura (se não tiver erro, fica vazio)
+$erro_atual = $_GET['erro'] ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -83,6 +89,10 @@ try {
             height: 80px;
         }
 
+        input[type="checkbox"] {
+            margin-top: 0;
+        }
+
         input[type="file"] {
             background: transparent;
             border: none;
@@ -144,7 +154,7 @@ try {
             padding: 10px;
             border-radius: 6px;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             font-size: 14px;
         }
     </style>
@@ -154,12 +164,13 @@ try {
 <div class="box">
     <h2>Cadastrar Jogador 🏐</h2>
 
-    <?php if (isset($_GET['erro'])): ?>
+    <?php if (!empty($erro_atual)): ?>
         <div class="error-msg">
             <?php 
-                if ($_GET['erro'] == 'campos_vazios') echo "Preencha todos os campos obrigatórios!";
-                elseif ($_GET['erro'] == 'upload') echo "Erro ao salvar a foto no servidor!";
-                elseif ($_GET['erro'] == 'extensao') echo "Formato inválido! Use apenas fotos JPG, JPEG ou PNG.";
+                if ($erro_atual == 'campos_vazios') echo "Preencha todos os campos obrigatórios!";
+                elseif ($erro_atual == 'upload') echo "Erro ao salvar a foto no servidor!";
+                elseif ($erro_atual == 'extensao') echo "Formato inválido! Use apenas JPG, JPEG, PNG ou WEBP.";
+                elseif ($erro_atual == 'tamanho') echo "A imagem deve ter no máximo 2MB.";
                 else echo "Erro ao salvar no banco de dados.";
             ?>
         </div>
@@ -214,7 +225,17 @@ try {
         </div>
 
         <label for="descricao">Descrição / Detalhes</label>
-        <textarea id="descricao" name="descricao" placeholder="Habilidades, características marcantes, lemas..."></textarea>
+        <textarea id="descricao" name="descricao" placeholder="Habilidades, características marcantes..."></textarea>
+
+        <label>Tags do Jogador</label>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
+            <?php foreach ($tags as $tag): ?>
+                <label style="display:flex; align-items:center; gap:6px; background:#334155; padding:8px 12px; border-radius:8px; margin-top:0; cursor:pointer;">
+                    <input type="checkbox" name="tags[]" value="<?php echo $tag['id']; ?>" style="width:auto; margin-top:0;">
+                    <?php echo htmlspecialchars($tag['nome']); ?>
+                </label>
+            <?php endforeach; ?>
+        </div> 
 
         <label for="imagem">Foto do Jogador</label>
         <input type="file" id="imagem" name="imagem" accept="image/*">

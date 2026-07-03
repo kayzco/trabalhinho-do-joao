@@ -15,24 +15,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // Se o usuário existir e a senha bater (ajuste aqui caso use password_verify)
-            if ($usuario && $senha === $usuario['senha']) {
-                
-                // Grava tudo na sessão
-                $_SESSION['id'] = $usuario['id'];
-                $_SESSION['nome'] = $usuario['nome'];
-                $_SESSION['descricao'] = $usuario['descricao'];
-                
-                // ✨ AQUI ESTÁ A MÁGICA DAS CORES: Salvando o time ao logar!
-                $_SESSION['id_time'] = $usuario['id_time']; 
+            // ... código anterior ...
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                // Manda direto para o dashboard com tudo funcionando
-                header("Location: dashboard.php");
-                exit;
-            } else {
-                // Senha errada ou usuário não existe
-                header("Location: login.php?erro=1");
-                exit;
-            }
+// 🔒 Verificação profissional usando password_verify
+if ($usuario && password_verify($senha, $usuario['senha'])) {
+    $_SESSION['id'] = $usuario['id'];
+    $_SESSION['nome'] = $usuario['nome'];
+    $_SESSION['descricao'] = $usuario['descricao'];
+    $_SESSION['id_time'] = $usuario['id_time'];
+    header("Location: dashboard.php");
+    exit;
+} else {
+    header("Location: login.php?erro=1");
+    exit;
+}
         } catch (PDOException $e) {
             die("Erro no sistema: " . $e->getMessage());
         }

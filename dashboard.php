@@ -305,29 +305,10 @@ if ($meu_time == 2) {
 
     <div id="cadastro" class="tab-content <?php echo ($aba_atual == 'cadastro') ? 'active' : ''; ?>">
         <h2>📝 Cadastrar Novo Jogador</h2>
-        <form action="salvar-personagem.php" method="POST">
-            <div class="form-group">
-                <label>Nome do Jogador:</label>
-                <input type="text" name="nome" required placeholder="Ex: Shoyo Hinata">
-            </div>
-            <input type="hidden" name="idade" value="16">
-            <input type="hidden" name="numero" value="10">
-            <input type="hidden" name="altura" value="1.64">
-            <input type="hidden" name="id_time" value="<?php echo $meu_time; ?>">
-            <input type="hidden" name="id_funcao" value="1">
-            
-            <div class="form-group">
-                <label>Posição:</label>
-                <select name="id_posicao">
-                    <option value="1">Central</option>
-                    <option value="2">Levantador</option>
-                    <option value="3">Ponteiro</option>
-                    <option value="4">Oposto</option>
-                    <option value="5">Líbero</option>
-                </select>
-            </div>
-            <button type="submit" class="btn-submit">Salvar Jogador</button>
-        </form>
+        <p>Use o formulário completo para cadastrar jogador com imagem, descrição, time, posição e função.</p>
+        <a href="form-personagem.php" class="btn-submit" style="display:inline-block; text-decoration:none;">
+            Ir para o formulário de cadastro
+        </a>
     </div>
 
     <div id="explicacao" class="tab-content <?php echo ($aba_atual == 'explicacao') ? 'active' : ''; ?>">

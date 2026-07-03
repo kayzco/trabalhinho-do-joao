@@ -13,9 +13,10 @@ if (empty($nome) || empty($email) || empty($senha)) {
     header("Location: cadastro.php?erro=campos_vazios");
     exit;
 }
+// ... captura dos dados sanitizados ...
+$senha_criptografada = password_hash($_POST['senha'], PASSWORD_BCRYPT);
 
 try {
-    // Verificar se o e-mail já existe
     $sqlCheck = "SELECT id FROM usuario WHERE email = :email";
     $stmtCheck = $pdo->prepare($sqlCheck);
     $stmtCheck->execute(['email' => $email]);
@@ -25,23 +26,19 @@ try {
         exit;
     }
 
-    // Salvando tudo no banco (incluindo descrição e time para a mágica das cores funcionar)
     $sqlInsert = "INSERT INTO usuario (nome, email, senha, descricao, id_time) VALUES (:nome, :email, :senha, :descricao, :id_time)";
     $stmtInsert = $pdo->prepare($sqlInsert);
     
     $stmtInsert->execute([
         'nome'      => $nome,
         'email'     => $email,
-        'senha'     => $senha,
+        'senha'     => $senha_criptografada, // 🔒 Hash Seguro salvo no Banco
         'descricao' => $descricao,
         'id_time'   => $id_time
     ]);
 
-    // Redireciona para o login com sucesso
     header("Location: login.php?sucesso=cadastrado");
     exit;
-
 } catch (PDOException $e) {
     die("Erro ao salvar no banco: " . $e->getMessage());
 }
-?>
