@@ -24,7 +24,6 @@ $id_posicao = filter_input(INPUT_POST, 'id_posicao', FILTER_VALIDATE_INT);
 $id_funcao  = filter_input(INPUT_POST, 'id_funcao', FILTER_VALIDATE_INT);
 $descricao  = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
 
-// Validação se os campos obrigatórios estão preenchidos
 if (!$nome || !$idade || !$numero || !$altura || !$id_time || !$id_posicao || !$id_funcao) {
     header("Location: dashboard.php?aba=cadastro&erro=campos_vazios");
     exit;
@@ -32,7 +31,6 @@ if (!$nome || !$idade || !$numero || !$altura || !$id_time || !$id_posicao || !$
 
 $nomeImagem = null;
 
-// Sistema de upload de imagem
 if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == UPLOAD_ERR_OK) {
     $pastaUpload = "uploads/";
 
@@ -62,14 +60,10 @@ if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == UPLOAD_ERR_OK) {
     }
 }
 
-// Captura as tags selecionadas no formulário (Relacionamento N:N)
-// Se nenhuma tag for marcada, inicializa como um array vazio []
 $tags_selecionadas = $_POST['tags'] ?? [];
 
-// ✨ ABRE O TRY AQUI PARA O CATCH LÁ DE BAIXO FUNCIONAR!
 try {
 
-    // Criando o objeto do Personagem usando as variáveis certas na ordem exata do construtor
     $personagem = new Personagem(
         null, 
         $nome, 
@@ -81,8 +75,8 @@ try {
         $id_funcao, 
         $id_posicao, 
         $nomeImagem,
-        $id_usuario,        // ID do utilizador logado passado diretamente
-        $tags_selecionadas  // Envia o array de IDs das tags (N:N) para a Entidade
+        $id_usuario,       
+        $tags_selecionadas 
     );
 
     $personagemRepo = new PersonagemRepository($pdo);
@@ -96,9 +90,8 @@ try {
         exit;
     }
 
-} // FECHA O TRY E COMEÇA O CATCH
+} 
 catch (\Exception $e) {
-    // Se a idade ou altura violar as regras de negócio da Entidade, captura o erro e mostra no ecrã
     die("Erro de validação na Entidade: " . $e->getMessage());
 }
 ?>

@@ -5,36 +5,34 @@ if (!isset($_SESSION['id'])) {
     exit;
 }
 require_once "config.php";
-
-// ✨ IMPORTANTE: Incluindo as classes necessárias para o repositório funcionar no inventário
 require_once "personagem.php";
 require_once "personagemrepository.php";
 use App\Repository\PersonagemRepository;
 
-// Captura qual aba está ativa (se não passar nada, o padrão é 'inventario')
 $aba_atual = $_GET['aba'] ?? 'inventario';
-
-// Captura qual time está filtrado (se não passar nada, o padrão é 'todos')
 $time_filtrado = $_GET['time'] ?? 'todos';
 
-// --- SISTEMA DE CORES DINÂMICO ---
-// Se por acaso não tiver o id_time na sessão, ele usa o 1 (Karasuno) como padrão
-$meu_time = $_SESSION['id_time'] ?? 1;
+$stmtUser = $pdo->prepare("SELECT id_time, descricao FROM usuario WHERE id = ?");
+$stmtUser->execute([$_SESSION['id']]);
+$dadosUsuario = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+$meu_time = $dadosUsuario['id_time'] ?? 1;
+$_SESSION['descricao'] = $dadosUsuario['descricao'] ?? 'Nenhuma descrição cadastrada.';
 
 $cor_tema = "#f97316"; 
 $nome_meu_time = "Karasuno";
 $emoji_time = "🦅";
 
 if ($meu_time == 2) {
-    $cor_tema = "#ef4444"; // Nekoma
+    $cor_tema = "#ef4444"; 
     $nome_meu_time = "Nekoma";
     $emoji_time = "🐈";
 } elseif ($meu_time == 3) {
-    $cor_tema = "#0d9488"; // Aoba Johsai
+    $cor_tema = "#0d9488"; 
     $nome_meu_time = "Aoba Johsai";
     $emoji_time = "🌱";
 } elseif ($meu_time == 6) {
-    $cor_tema = "#86198f"; // Shiratorizawa
+    $cor_tema = "#86198f"; 
     $nome_meu_time = "Shiratorizawa";
     $emoji_time = "👑";
 }
@@ -54,7 +52,6 @@ if ($meu_time == 2) {
             padding: 0;
         }
 
-        /* Topo do Painel */
         header {
             background: #1e293b;
             padding: 20px;
@@ -77,7 +74,6 @@ if ($meu_time == 2) {
             margin-left: 15px;
         }
 
-        /* Menu de Abas */
         .tabs-menu {
             display: flex;
             background: #1e293b;
@@ -132,7 +128,6 @@ if ($meu_time == 2) {
             padding-bottom: 10px;
         }
 
-        /* Estilos da Tabela do Inventário */
         .tabela-inventario {
             width: 100%;
             border-collapse: collapse;
@@ -165,7 +160,6 @@ if ($meu_time == 2) {
             text-decoration: underline; 
         }
 
-        /* Estilos do Filtro de Times */
         .btn-filtro {
             background: #334155;
             color: #f8fafc;
@@ -176,7 +170,7 @@ if ($meu_time == 2) {
             font-weight: bold;
         }
         .btn-filtro.active-filter {
-            background: <?php echo $cor_tema; ?>; /* Cor dinâmica */
+            background: <?php echo $cor_tema; ?>; 
         }
 
         /* Estilos do Formulário */
@@ -261,10 +255,8 @@ if ($meu_time == 2) {
 
         <?php
         try {
-            // ✨ INSTÂNCIA DA POO: Criamos o repositório utilizando o arquivo que alteramos
             $personagemRepo = new PersonagemRepository($pdo);
             
-            // ✨ CHAMADA PROTETORA: Passamos o ID da sessão e o filtro de time para buscar a lista segura
             $personagens = $personagemRepo->listarTodosPorUsuario($_SESSION['id'], $time_filtrado);
             
             if (count($personagens) > 0): 
@@ -311,53 +303,128 @@ if ($meu_time == 2) {
         </a>
     </div>
 
-    <div id="explicacao" class="tab-content <?php echo ($aba_atual == 'explicacao') ? 'active' : ''; ?>">
-        <h2>🏐 Sobre o Sistema Haikyuu!!</h2>
-        <p>Este sistema é um CRUD desenvolvido para gerenciar informações de times e jogadores de Vôlei baseados no anime Haikyuu!!.</p>
-        <p>Desenvolvido como projeto escolar/acadêmico para aplicar conceitos de PHP, Programação Orientada a Objetos (POO) e Bancos de Dados.</p>
+<div id="explicacao" class="tab-content <?php echo ($aba_atual == 'explicacao') ? 'active' : ''; ?>">
+        <h2> Sobre o trabalho! </h2>
+
+        <p>Bem-vindo ao nosso centro de comando técnico! Se você chegou até aqui, parabéns, você acaba de entrar nos bastidores do sistema que me custou algumas noites de sono e muitos neurônios, mas tá funcionando (amém!). Este site é um <strong>CRUD</strong> completinho feito em PHP puro para gerenciar os jogadores e times do universo de <em>Haikyuu!!</em>. </p>
+
+        <h3>🛠️ Como funciona os Bastidores?</h3>
+        <ul>
+            <li><strong>📝 O Cadastro:</strong> Sabe quando o Ukai tá analisando as fichas dos novos membros da Karasuno? É tipo isso! Na nossa tela de cadastro, você joga os dados reais do atleta (Nome, Número da Camisa, Idade, Altura, Posição, Time, Função e as Tags dele). O sistema limpa tudo pra não quebrar e joga direto no banco de dados MySQL</li>
+            <li><strong>🎒 O Inventário:</strong> É uma tabela que só vai te mostrar os personagens que <em>você</em> cadastrou (nada de um usuário bagunçar a quadra do outro!). Dá pra filtrar tudo por time rapidinho, e se você fez alguma burrada ou o jogador mudou de status, os botões de <strong>Editar</strong> e <strong>Excluir</strong> estão ali pra te salvar. </li>
+            <li><strong>🎨 O Universo de Haikyuu na Interface:</strong> Assim que você faz o login, a interface muda de cor sozinha! Fica Laranja se você for da <em>Karasuno</em>, Vermelho se for da <em>Nekoma</em>, Turquesa da <em>Aoba Johsai</em> e Roxo da <em>Shiratorizawa</em>. O painel veste a sua camisa!</li>
+            <li><strong>👤 O Painel do Técnico (Meu Perfil):</strong> Aqui é onde você gerencia seu crachá oficial de comando! Além de poder mudar sua biografia e notas táticas, criamos uma integração total com o banco de dados que faz um <code>COUNT</code> em tempo real de quantos atletas estão sob seu comando. E tem mais: o sistema calcula automaticamente a sua porcentagem de "Alinhamento com o Clube", medindo quantos dos seus jogadores cadastrados jogam no mesmo time que você torce. É o seu relatório de olheiro profissional atualizado em um clique!</li>
+        </ul>
+
+        <h3> O Anime Aplicado na Programação (POO)</h3>
+        <ul>
+            <li>A classe <code>Personagem</code> (Entidade) funciona como a ficha técnica e médica real do atleta. Ela cuida das regras de negócio e protege o próprio estado. Se a idade ou altura forem inválidas pro vôlei escolar, ela joga uma Exception na hora!</li>
+            <li>A classe <code>PersonagemRepository</code> funciona como o próprio olheiro ou empresário do time. Ela é a única que tem permissão de pisar na quadra (o banco de dados) para buscar, salvar, atualizar ou mandar um jogador pro banco (excluir) usando PDO.</li>
+        </ul>
+
+        <hr style="border-color: #334155; margin: 25px 0;">
+
+        <h3>✍️ Quem Fez Isso Acontecer? (Créditos)</h3>
+        <p>🚀 <strong>Desenvolvido por:</strong> Kaylane e Anna !!!</p>
+        <p>🤝 <strong>Apoio Moral e Técnico:</strong> O computador mesmo, que ficou assistindo eu com serissímas dificuldades com o github. Ah, e também um colega meu de Realengo que é programador e vai pra Tokyo  </p>
+        <blockquote style="background: #0f172a; padding: 15px; border-left: 4px solid <?php echo $cor_tema ?? '#f97316'; ?>; margin-top: 20px; font-style: italic; border-radius: 4px;">
+            <strong>⚠️ NOTA DA DESENVOLVEDORA:</strong> Eu me senti no dever de honrar a minha tradição de todo ano fazer um trabalho sobre Haikyuu, é o meu anime conforto. RECOMENDO! <strong>Fly! 🦅</strong>
+        </blockquote>
+
+        <div style="margin-top: 30px; text-align: center; font-family: 'Poppins', sans-serif;">
+            <p style="font-size: 1.2rem; font-weight: 600; color: #f97316; letter-spacing: 1px; text-transform: uppercase; margin: 0;">
+                "A vida é um tédio se você não se desafiar a si mesmo".
+            </p>
+            <p style="font-size: 0.9rem; color: #94a3b8; font-style: italic; margin-top: 5px;">— Yuu Nishinoya (Haikyuu!!)</p>
+        </div>
     </div>
 
     <div id="perfil" class="tab-content <?php echo ($aba_atual == 'perfil') ? 'active' : ''; ?>">
-        <h2>⚙️ Meu Perfil & Meu Personagem</h2>
-        
-        <div style="display: flex; gap: 30px; flex-wrap: wrap; margin-top: 20px;">
+        <h2>👤 Painel do Técnico</h2>
+        <p style="color: #94a3b8; margin-bottom: 25px;">Gerencia as tuas credenciais de comando e acompanha o rendimento da tua equipa técnica.</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
             
-            <div style="flex: 1; min-width: 300px;">
-                <div class="form-group">
-                    <label>Seu Nome de Usuário:</label>
-                    <input type="text" value="<?php echo $_SESSION['nome']; ?>" disabled style="background: #334155; color: #cbd5e1;">
-                </div>
-                <div class="form-group">
-                    <label>Sua Descrição:</label>
-                    <textarea rows="4" disabled style="background: #334155; color: #cbd5e1; resize: none;"><?php echo $_SESSION['descricao'] ?? 'Nenhuma descrição cadastrada.'; ?></textarea>
-                </div>
-                <p style="color: #94a3b8; font-size: 0.85rem; font-style: italic;">* Os dados acima foram configurados na criação da sua conta.</p>
+            <div style="background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155;">
+                <h3 style="margin-bottom: 20px; color: #fff; display: flex; align-items: center; gap: 10px;">
+                    📝 Atualizar Cadastro
+                </h3>
+                
+                <form action="atualizar-perfil.php" method="POST">
+                    <label style="color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 8px;">Nome do Técnico</label>
+                    <input type="text" name="nome" value="<?php echo htmlspecialchars($_SESSION['nome']); ?>" required 
+                           style="width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; margin-bottom: 15px;">
+
+                    <label style="color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 8px;">Clube de Coração (Muda a cor do site!)</label>
+                    <select name="id_time" required style="width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; margin-bottom: 15px;">
+                        <option value="1" <?php echo ($_SESSION['id_time'] == 1) ? 'selected' : ''; ?>>Karasuno (Laranja)</option>
+                        <option value="2" <?php echo ($_SESSION['id_time'] == 2) ? 'selected' : ''; ?>>Nekoma (Vermelho)</option>
+                        <option value="3" <?php echo ($_SESSION['id_time'] == 3) ? 'selected' : ''; ?>>Aoba Johsai (Turquesa)</option>
+                        <option value="4" <?php echo ($_SESSION['id_time'] == 4) ? 'selected' : ''; ?>>Shiratorizawa (Roxo)</option>
+                    </select>
+
+                    <label style="color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 8px;">Biografia / Notas de Estratégia</label>
+                    <textarea name="descricao" rows="4" style="width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; margin-bottom: 20px; resize: none;"><?php echo htmlspecialchars($_SESSION['descricao'] ?? ''); ?></textarea>
+
+                    <button type="submit" style="background: <?php echo $cor_tema ?? '#f97316'; ?>; color: #fff; border: none; padding: 12px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.2s;">
+                        Salvar Alterações
+                    </button>
+                </form>
             </div>
 
-            <div style="flex: 1; min-width: 280px; background: #0f172a; padding: 25px; border-radius: 12px; border: 2px dashed <?php echo $cor_tema; ?>; text-align: center;">
-                <h3 style="margin-top: 0; color: white;">🧍 Seu Avatar do Time</h3>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
                 
-                <div style="font-size: 5rem; line-height: 1; margin: 15px 0;">🧍‍♂️</div>
-                
-                <p style="margin: 8px 0; font-size: 1.1rem;">
-                    Pertence ao time: <strong style="color: <?php echo $cor_tema; ?>;"><?php echo $nome_meu_time; ?></strong>
-                </p>
-                
-                <div style="background: #1e293b; padding: 10px; border-radius: 6px; margin-top: 15px; border: 1px solid #334155;">
-                    <p style="margin: 5px 0; font-size: 0.9rem; color: #94a3b8;">
-                        Uniforme equipado:
-                    </p>
-                    <span style="display: inline-block; padding: 5px 12px; background: <?php echo $cor_tema; ?>; color: white; border-radius: 20px; font-weight: bold; font-size: 0.85rem;">
+                <div style="background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155; position: relative; overflow: hidden;">
+                    <div style="position: absolute; right: -15px; bottom: -15px; font-size: 6rem; opacity: 0.05; color: #fff; pointer-events: none;">🏐</div>
+                    
+                    <h3 style="margin-bottom: 5px; color: #fff;"><?php echo htmlspecialchars($_SESSION['nome']); ?></h3>
+                    <p style="color: <?php echo $cor_tema ?? '#f97316'; ?>; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">
                         <?php 
-                            if ($meu_time == 1) echo "Oficial Preto e Laranja";
-                            if ($meu_time == 2) echo "Clássico Vermelho Escuro";
-                            if ($meu_time == 3) echo "Turquesa e Branco Alvo";
-                            if ($meu_time == 6) echo "Branco e Roxo Imperial";
+                            if ($_SESSION['id_time'] == 1) echo "VOE (Karasuno)";
+                            elseif ($_SESSION['id_time'] == 2) echo "CONECTAR (Nekoma)";
+                            elseif ($_SESSION['id_time'] == 3) echo "DOMINE A QUADRA (Aoba Johsai)";
+                            elseif ($_SESSION['id_time'] == 4) echo "FORÇA IRRESISTÍVEL (Shiratorizawa)";
+                            else echo "Olheiro Independente";
                         ?>
-                    </span>
+                    </p>
+                    <p style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5; font-style: italic;">
+                        "<?php echo !empty($_SESSION['descricao']) ? htmlspecialchars($_SESSION['descricao']) : 'Nenhuma nota de estratégia anotada ainda...'; ?>"
+                    </p>
                 </div>
-            </div>
 
+                <div style="background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155;">
+                    <h4 style="color: #fff; margin-bottom: 20px;">Relatório de Olheiro</h4>
+                    
+                    <?php
+                        $stmtCount = $pdo->prepare("SELECT COUNT(*) FROM personagem WHERE id_usuario = ?");
+                        $stmtCount->execute([$_SESSION['id']]);
+                        $totalJogadores = $stmtCount->fetchColumn();
+
+                        $stmtTimeCount = $pdo->prepare("SELECT COUNT(*) FROM personagem WHERE id_usuario = ? AND id_time = ?");
+                        $stmtTimeCount->execute([$_SESSION['id'], $_SESSION['id_time']]);
+                        $jogadoresMesmoTime = $stmtTimeCount->fetchColumn();
+
+                        // Calcula aq uma barra de progresso baseada nos registos
+                        $progresso = ($totalJogadores > 0) ? min(($jogadoresMesmoTime / $totalJogadores) * 100, 100) : 0;
+                    ?>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; background: #0f172a; padding: 12px; border-radius: 8px;">
+                        <span style="color: #94a3b8; font-size: 0.9rem;">Jogadores Registados:</span>
+                        <span style="color: #fff; font-weight: bold; font-size: 1.1rem;"><?php echo $totalJogadores; ?></span>
+                    </div>
+
+                    <div style="margin-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px;">
+                            <span>Alinhamento com o Clube:</span>
+                            <span style="color: <?php echo $cor_tema ?? '#f97316'; ?>; font-weight: 600;"><?php echo round($progresso); ?>%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #0f172a; border-radius: 4px; overflow: hidden;">
+                            <div style="width: <?php echo $progresso; ?>%; height: 100%; background: <?php echo $cor_tema ?? '#f97316'; ?>; border-radius: 4px; transition: width 0.5s;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 

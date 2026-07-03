@@ -115,7 +115,6 @@ class PersonagemRepository {
                 'id_usuario' => $p->getIdUsuario()
             ]);
 
-            // Atualiza o Relacionamento N:N (Limpa os antigos e insere os novos)
             $stmtClean = $this->pdo->prepare("DELETE FROM personagem_tag WHERE id_personagem = ?");
             $stmtClean->execute([$p->getId()]);
 

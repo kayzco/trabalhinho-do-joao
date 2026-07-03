@@ -26,14 +26,12 @@ if (!$personagem) {
     exit;
 }
 
-// Buscar dados auxiliares do banco para preencher as opções (dropdowns e checkboxes)
 try {
     $times = $pdo->query("SELECT id, nome FROM time ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
     $posicoes = $pdo->query("SELECT id, nome FROM posicao ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
     $funcoes = $pdo->query("SELECT id, nome FROM funcao ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
     $tags = $pdo->query("SELECT id, nome FROM tag ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Buscar quais tags este jogador específico já possui cadastradas (Muitos para Muitos)
     $stmtJogadorTags = $pdo->prepare("SELECT id_tag FROM personagem_tag WHERE id_personagem = ?");
     $stmtJogadorTags->execute([$id]);
     $tagsDoJogador = $stmtJogadorTags->fetchAll(PDO::FETCH_COLUMN); // Cria um array simples só com os IDs das tags dele

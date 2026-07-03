@@ -1,20 +1,17 @@
 <?php
 include "config.php";
 
-// Pegando os dados do formulário
 $nome      = $_POST['nome'] ?? '';
 $email     = $_POST['email'] ?? '';
 $senha     = $_POST['senha'] ?? '';
 $descricao = $_POST['descricao'] ?? '';
-$id_time   = $_POST['id_time'] ?? 1;
 
-// Validação simples nível nota 7
+$id_time   = isset($_POST['id_time']) ? (int)$_POST['id_time'] : 1;
+
 if (empty($nome) || empty($email) || empty($senha)) {
     header("Location: cadastro.php?erro=campos_vazios");
     exit;
 }
-// ... captura dos dados sanitizados ...
-$senha_criptografada = password_hash($_POST['senha'], PASSWORD_BCRYPT);
 
 try {
     $sqlCheck = "SELECT id FROM usuario WHERE email = :email";
@@ -32,13 +29,13 @@ try {
     $stmtInsert->execute([
         'nome'      => $nome,
         'email'     => $email,
-        'senha'     => $senha_criptografada, // 🔒 Hash Seguro salvo no Banco
+        'senha'     => $senha, 
         'descricao' => $descricao,
-        'id_time'   => $id_time
+        'id_time'   => $id_time 
     ]);
 
     header("Location: login.php?sucesso=cadastrado");
     exit;
 } catch (PDOException $e) {
-    die("Erro ao salvar no banco: " . $e->getMessage());
+    die("Erro ao salvar no banco de dados: " . $e->getMessage());
 }

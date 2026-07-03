@@ -14,9 +14,8 @@ class Personagem {
     private int $idPosicao;
     private ?string $imagem;
     private int $idUsuario;
-    private array $tags = []; // Para armazenar o relacionamento N:N
+    private array $tags = []; 
 
-    // Construtor ajustado exatamente para a ordem de parâmetros que você usa no salvar-personagem.php
     public function __construct(
         ?int $id = null,
         string $nome = '',
@@ -33,8 +32,8 @@ class Personagem {
     ) {
         $this->id = $id;
         $this->nome = $nome;
-        $this->setIdade($idade);     // Passa pelo método setter para validar as regras do professor
-        $this->setAltura($altura);   // Passa pelo método setter para validar
+        $this->setIdade($idade);    
+        $this->setAltura($altura); 
         $this->numero = $numero;
         $this->descricao = $descricao;
         $this->idTime = $idTime;
@@ -45,7 +44,7 @@ class Personagem {
         $this->tags = $tags;
     }
 
-    // Regra de Negócio dentro da Entidade (Exigência forte do enunciado para proteger o estado do objeto)
+    
     public function setIdade(int $idade): void {
         if ($idade < 12 || $idade > 30) {
             throw new \Exception("Idade inválida para um estudante/atleta escolar (permitido entre 12 e 30 anos).");
@@ -64,7 +63,6 @@ class Personagem {
         $this->idUsuario = $idUsuario;
     }
 
-    // Getters necessários para o PersonagemRepository salvar no banco
     public function getId(): ?int { return $this->id; }
     public function getNome(): string { return $this->nome; }
     public function getIdade(): int { return $this->idade; }

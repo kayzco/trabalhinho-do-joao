@@ -7,19 +7,16 @@ if (!isset($_SESSION['id'])) {
 
 require_once "config.php";
 
-// Buscar os times, posições, funções e TAGS para listar na tela
 try {
     $times = $pdo->query("SELECT id, nome FROM time ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
     $posicoes = $pdo->query("SELECT id, nome FROM posicao ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
     $funcoes = $pdo->query("SELECT id, nome FROM funcao ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
     
-    // ✨ CORREÇÃO: Buscando as tags do banco para o foreach da linha 219 não quebrar!
     $tags = $pdo->query("SELECT id, nome FROM tag ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Erro ao carregar dados auxiliares do banco: " . $e->getMessage());
 }
 
-// Captura o erro da URL de forma segura (se não tiver erro, fica vazio)
 $erro_atual = $_GET['erro'] ?? '';
 ?>
 
