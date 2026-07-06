@@ -72,6 +72,11 @@ if ($meu_time == 2) {
             text-decoration: none;
             font-weight: bold;
             margin-left: 15px;
+            transition: 0.25s;
+        }
+
+        .user-info a:hover {
+            color: #ffffff;
         }
 
         .tabs-menu {
@@ -139,6 +144,7 @@ if ($meu_time == 2) {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #334155;
+            vertical-align: middle;
         }
         
         .tabela-inventario th {
@@ -146,8 +152,13 @@ if ($meu_time == 2) {
             color: <?php echo $cor_tema; ?>; /* Cor dinâmica */
         }
         
-        .tabela-inventario tr:hover {
+        .tabela-inventario tr {
+            transition: background-color 0.25s ease;
+        }
+
+        .tabela-inventario tr:hover { 
             background-color: #475569;
+            transform: scale(1.01);
         }
         
         .btn-excluir {
