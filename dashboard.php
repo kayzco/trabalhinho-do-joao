@@ -215,8 +215,12 @@ if ($meu_time == 2) {
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s ease; 
         }
-        .btn-submit:hover { opacity: 0.9; }
+        .btn-submit:hover { 
+            opacity: 0.95;
+            transform: translateY(-2px);
+         }
     </style>
 </head>
 <body>
