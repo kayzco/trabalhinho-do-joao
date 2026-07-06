@@ -252,7 +252,7 @@ button:hover{
 
     <div class="logo">🏐</div>
 
-    <h2>Haikyuu!! Manager</h2>
+    <h2>Haikyuu!!</h2>
 
     <p class="subtitulo">
         Faça login para acessar o sistema.

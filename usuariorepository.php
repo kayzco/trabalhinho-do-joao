@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-// Precisamos puxar a classe do usuário aqui para o repositório conhecê-la!
 require_once "usuario.php"; 
 
 use App\Entity\Usuario;
@@ -16,7 +15,7 @@ class UsuarioRepository {
     }
 
     public function buscarPorEmailESenha(string $email, string $senha): ?Usuario {
-        // Usando prepared statements para evitar SQL Injection
+        // Comparação direta de email e senha em texto limpo
         $stmt = $this->pdo->prepare("SELECT * FROM usuario WHERE email = :email AND senha = :senha");
         $stmt->execute(['email' => $email, 'senha' => $senha]);
         

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 class Personagem {
-    private ?int $id;
+    private ?int $id = null;
     private string $nome;
     private int $idade;
     private float $altura;
@@ -13,26 +13,56 @@ class Personagem {
     private int $idFuncao;
     private int $idPosicao;
     private ?string $imagem;
-    private ?int $idUsuario; // ✨ Adicionado o atributo para o Usuário Dono
+    private int $idUsuario;
+    private array $tags = []; 
 
     public function __construct(
-        ?int $id, string $nome, int $idade, float $altura, int $numero, 
-        string $descricao, int $idTime, int $idFuncao, int $idPosicao, ?string $imagem = null
+        ?int $id = null,
+        string $nome = '',
+        int $idade = 0,
+        float $altura = 0.0,
+        int $numero = 0,
+        string $descricao = '',
+        int $idTime = 0,
+        int $idFuncao = 0,
+        int $idPosicao = 0,
+        ?string $imagem = null,
+        int $idUsuario = 0,
+        array $tags = []
     ) {
         $this->id = $id;
         $this->nome = $nome;
-        $this->idade = $idade;
-        $this->altura = $altura;
+        $this->setIdade($idade);    
+        $this->setAltura($altura); 
         $this->numero = $numero;
         $this->descricao = $descricao;
         $this->idTime = $idTime;
         $this->idFuncao = $idFuncao;
         $this->idPosicao = $idPosicao;
         $this->imagem = $imagem;
-        $this->idUsuario = null; // Inicializa vazio por padrão
+        $this->idUsuario = $idUsuario;
+        $this->tags = $tags;
     }
 
-    // Getters e Setters para o PHP conseguir ler e gravar os dados protegidos
+    
+    public function setIdade(int $idade): void {
+        if ($idade < 12 || $idade > 30) {
+            throw new \Exception("Idade inválida para um estudante/atleta escolar (permitido entre 12 e 30 anos).");
+        }
+        $this->idade = $idade;
+    }
+
+    public function setAltura(float $altura): void {
+        if ($altura < 1.30 || $altura > 2.50) {
+            throw new \Exception("Altura fora dos padrões físicos permitidos para a liga.");
+        }
+        $this->altura = $altura;
+    }
+
+    public function setIdUsuario(int $idUsuario): void {
+        $this->idUsuario = $idUsuario;
+    }
+
     public function getId(): ?int { return $this->id; }
     public function getNome(): string { return $this->nome; }
     public function getIdade(): int { return $this->idade; }
@@ -43,8 +73,6 @@ class Personagem {
     public function getIdFuncao(): int { return $this->idFuncao; }
     public function getIdPosicao(): int { return $this->idPosicao; }
     public function getImagem(): ?string { return $this->imagem; }
-    
-    // ✨ Métodos novos para o id_usuario
-    public function getIdUsuario(): ?int { return $this->idUsuario; }
-    public function setIdUsuario(?int $idUsuario): void { $this->idUsuario = $idUsuario; }
+    public function getIdUsuario(): int { return $this->idUsuario; }
+    public function getTags(): array { return $this->tags; }
 }

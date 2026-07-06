@@ -4,7 +4,7 @@ session_start();
 
 $nome = $_POST['nome'];
 $email = $_POST['email'];
-$senha = $_POST['senha']; // Em produção, use password_hash
+$senha = $_POST['senha']; 
 $descricao = $_POST['descricao'];
 $id_time = $_POST['id_time'];
 

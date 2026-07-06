@@ -1,49 +1,56 @@
 <?php
 session_start();
 require_once "config.php";
+require_once "usuario.php";
+require_once "usuariorepository.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-    $senha = $_POST['senha'] ?? '';
+use App\Repository\UsuarioRepository;
 
-    if ($email && !empty($senha)) {
-        try {
-            // ✨ IMPORTANTE: O SELECT garante que estamos pegando o 'id_time' e a 'descricao'
-            $sql = "SELECT id, nome, email, senha, descricao, id_time FROM usuario WHERE email = :email";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute(['email' => $email]);
-            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+$email = $_POST['email'] ?? '';
+$senha = $_POST['senha'] ?? '';
 
-            // Se o usuário existir e a senha bater (ajuste aqui caso use password_verify)
-            if ($usuario && $senha === $usuario['senha']) {
-                
-                // Grava tudo na sessão
-                $_SESSION['id'] = $usuario['id'];
-                $_SESSION['nome'] = $usuario['nome'];
-                $_SESSION['descricao'] = $usuario['descricao'];
-                
-                // ✨ AQUI ESTÁ A MÁGICA DAS CORES: Salvando o time ao logar!
-                $_SESSION['id_time'] = $usuario['id_time']; 
-
-                // Manda direto para o dashboard com tudo funcionando
-                header("Location: dashboard.php");
-                exit;
-            } else {
-                // Senha errada ou usuário não existe
-                header("Location: login.php?erro=1");
-                exit;
-            }
-        } catch (PDOException $e) {
-            die("Erro no sistema: " . $e->getMessage());
-        }
-    } else {
-        header("Location: login.php?erro=1");
-        exit;
-    }
-} else {
-    header("Location: login.php");
+if (empty($email) || empty($senha)) {
+    header("Location: login.php?erro=1");
     exit;
 }
 
+$repo = new UsuarioRepository($pdo);
 
+// O repositório faz a busca e valida a senha, retornando o objeto Usuario
+$usuario = $repo->buscarPorEmailESenha($email, $senha);
 
+if ($usuario) {
+    
+    // ✨ O TRUQUE INFALÍVEL: Convertemos o objeto para um array para burlar o bloqueio de "private"
+    // e conseguir ler os dados sem depender de adivinhar o nome dos métodos get!
+    $usuarioArray = (array) $usuario;
+
+    // Quando o PHP converte um objeto de uma classe com propriedades privadas para array,
+    // as chaves ganham o nome da classe antes do atributo. Vamos mapear isso com segurança:
+    $id = null;
+    $nome = '';
+    $descricao = '';
+    $id_time = 1;
+    $foto_perfil = null;
+
+    foreach ($usuarioArray as $chave => $valor) {
+        if (str_contains($chave, 'id')) $id = $valor;
+        if (str_contains($chave, 'nome')) $nome = $valor;
+        if (str_contains($chave, 'descricao')) $descricao = $valor;
+        if (str_contains($chave, 'idTime') || str_contains($chave, 'id_time')) $id_time = $valor;
+        if (str_contains($chave, 'foto_perfil') || str_contains($chave, 'fotoPerfil')) $foto_perfil = $valor;
+    }
+
+    // Configura as sessões com os valores extraídos com segurança
+    $_SESSION['id']          = $id;
+    $_SESSION['nome']        = $nome;
+    $_SESSION['descricao']   = $descricao;
+    $_SESSION['id_time']     = $id_time;
+    $_SESSION['foto_perfil'] = $foto_perfil;
+
+    header("Location: dashboard.php");
+    exit;
+} else {
+    header("Location: login.php?erro=usuario_invalido");
+    exit;
+}
