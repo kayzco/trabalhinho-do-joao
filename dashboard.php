@@ -109,7 +109,6 @@ if ($meu_time == 2) {
             color: white;
         }
 
-        /* Conteúdo das Abas */
         .container {
             padding: 30px;
         }
@@ -179,7 +178,13 @@ if ($meu_time == 2) {
             border-radius: 6px;
             font-size: 0.9rem;
             font-weight: bold;
+            transition: 0.2s ease;
         }
+        .btn-filtro:hover {
+    background: #475569;
+    transform: translateY(-2px);
+}
+
         .btn-filtro.active-filter {
             background: <?php echo $cor_tema; ?>; 
         }
