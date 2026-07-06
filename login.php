@@ -78,6 +78,16 @@ body::after{
 
     animation:aparecer .7s ease;
 
+    transition: transform .3s ease, box-shadow .3s ease;
+
+}
+
+.box:hover{
+
+transform:translateY(-4px);
+
+box shadow:0 25px 55px rgba(0,0,0,.45);
+
 }
 
 .logo{
@@ -93,6 +103,8 @@ h2{
     text-align:center;
     color:#f97316;
     margin-bottom:8px;
+    letter-spacing:1px;
+    text-transform:uppercase;
 
 }
 
@@ -122,6 +134,7 @@ input{
 
     transition:.3s;
 
+    font-size:15px;
 }
 
 input::placeholder{
@@ -137,6 +150,8 @@ input:focus{
     border-color:#f97316;
 
     box-shadow:0 0 12px rgba(249,115,22,.35);
+
+    transform:scale(1.01);
 
 }
 
@@ -164,15 +179,17 @@ button{
 
     transition:.3s;
 
+    letter-spacing:.5px;
+
 }
 
 button:hover{
 
-    transform:translateY(-2px);
+    transform:translateY(-3px);
 
     background:#ea580c;
 
-    box-shadow:0 10px 20px rgba(249,115,22,.35);
+    box-shadow:0 12px 24px rgba(249,115,22,.40);
 
 }
 
