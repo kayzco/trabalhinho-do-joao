@@ -52,6 +52,13 @@ try {
             color: #f97316; /* Laranja Haikyuu */
             font-size: 1.8rem;
         }
+        .subtitle {
+    text-align: center;
+    color: #94a3b8;
+    margin-top: -10px;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
 
         label {
             display: block;
@@ -152,7 +159,8 @@ try {
 <body>
 
 <div class="box">
-    <h2>Cadastrar Jogador 🏐</h2>
+    <h2>Cadastrar Novo Jogador 🏐</h2>
+    <p class="subtitle">Preencha os dados para adicionar um jogador ao sistema.</p>
 
     <?php if (isset($_GET['erro'])): ?>
         <div class="error-msg">
