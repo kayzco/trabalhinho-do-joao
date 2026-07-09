@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 09/07/2026 às 20:23
+-- Tempo de geração: 09/07/2026 às 20:35
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.2.4
 
@@ -167,11 +167,11 @@ CREATE TABLE `time` (
 
 INSERT INTO `time` (`id`, `nome`, `lema`) VALUES
 (1, 'Karasuno', NULL),
-(2, 'Nekoma', NULL),
-(3, 'Aobajosai', NULL),
+(2, 'Nekoma', 'conectados como um gato'),
+(3, 'Aobajosai', 'a força supera o talento'),
 (4, 'Datekou', NULL),
 (5, 'Fukurodani', NULL),
-(6, 'Shiratorizawa', NULL),
+(6, 'Shiratorizawa', 'a força vence tudo'),
 (7, 'Johzenji', NULL),
 (8, 'Tokonami', NULL),
 (9, 'Wakutani Sul', NULL),
@@ -187,7 +187,8 @@ INSERT INTO `time` (`id`, `nome`, `lema`) VALUES
 (19, 'Hakusuikan', NULL),
 (20, 'Yukigaoka', NULL),
 (21, 'Fundamental', NULL),
-(22, 'Outros', NULL);
+(22, 'Outros', NULL),
+(23, 'fukorodani', 'voar mais alto');
 
 -- --------------------------------------------------------
 
@@ -303,7 +304,7 @@ ALTER TABLE `tag`
 -- AUTO_INCREMENT de tabela `time`
 --
 ALTER TABLE `time`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de tabela `usuario`
