@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 09/07/2026 às 20:35
+-- Tempo de geração: 09/07/2026 às 20:48
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.2.4
 
@@ -69,9 +69,9 @@ CREATE TABLE `personagem` (
 --
 
 INSERT INTO `personagem` (`id`, `nome`, `idade`, `altura`, `numero`, `descricao`, `id_time`, `id_funcao`, `id_posicao`, `imagem`, `id_usuario`) VALUES
-(1, 'Daichi Sawamura', NULL, NULL, NULL, NULL, 1, 1, 5, NULL, NULL),
-(2, 'Koshi Sugawara', NULL, NULL, NULL, NULL, 1, 1, 3, NULL, NULL),
-(3, 'Asahi Azumane', NULL, NULL, NULL, NULL, 1, 1, 2, NULL, NULL),
+(1, 'Daichi Sawamura', 12, 2, 22, NULL, 1, 1, 5, NULL, NULL),
+(2, 'Koshi Sugawara', 16, 2, 2, NULL, 1, 1, 3, NULL, NULL),
+(3, 'Asahi Azumane', 14, 2, 7, NULL, 1, 1, 2, NULL, NULL),
 (4, 'Yu Nishinoya', NULL, NULL, NULL, NULL, 1, 1, 1, NULL, NULL),
 (5, 'Ryunosuke Tanaka', NULL, NULL, NULL, NULL, 1, 1, 2, NULL, NULL),
 (6, 'Chikara Ennoshita', NULL, NULL, NULL, NULL, 1, 1, 2, NULL, NULL),
@@ -91,7 +91,8 @@ INSERT INTO `personagem` (`id`, `nome`, `idade`, `altura`, `numero`, `descricao`
 (23, 'marie', 15, 2, 11, 'miau', 4, 1, 5, NULL, NULL),
 (29, 'oij', 16, 2, 10, '', 2, 1, 1, NULL, NULL),
 (31, 'seu ze', 13, 2, 22, 'sei q la', 3, 5, 4, '86943d336cab9c7df113137b80bf683e.png', 1),
-(32, 'iup lero', 14, 2, 12, 'lero', 4, 1, 4, NULL, 1);
+(32, 'iup lero', 14, 2, 12, 'lero', 4, 1, 4, NULL, 1),
+(34, 'anna', 12, 2, 3, '', 13, 4, 4, NULL, 18);
 
 -- --------------------------------------------------------
 
@@ -103,6 +104,13 @@ CREATE TABLE `personagem_tag` (
   `id_personagem` int(11) NOT NULL,
   `id_tag` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `personagem_tag`
+--
+
+INSERT INTO `personagem_tag` (`id_personagem`, `id_tag`) VALUES
+(34, 4);
 
 -- --------------------------------------------------------
 
@@ -219,7 +227,8 @@ INSERT INTO `usuario` (`id`, `nome`, `email`, `senha`, `descricao`, `id_time`, `
 (14, 'kenma', 'kenma@gmail.com', '5', '', 2, NULL),
 (15, 'seu ze', 'seuzezinho@gmail.com', '321', '', 6, NULL),
 (16, 'aaa', 'aa@gmail.com', '12', '', 6, NULL),
-(17, 'jujubinha', 'juj@gmail.com', '123', 'a menininha', 1, 'avatar_d2f5ef3136642b0899410121c4fc5e55.png');
+(17, 'jujubinha', 'juj@gmail.com', '123', 'a menininha', 1, 'avatar_d2f5ef3136642b0899410121c4fc5e55.png'),
+(18, 'anna', 'euannatavares@gmail.com', 'pituca171', '', 2, NULL);
 
 --
 -- Índices para tabelas despejadas
@@ -286,7 +295,7 @@ ALTER TABLE `funcao`
 -- AUTO_INCREMENT de tabela `personagem`
 --
 ALTER TABLE `personagem`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de tabela `posicao`
@@ -310,7 +319,7 @@ ALTER TABLE `time`
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Restrições para tabelas despejadas
